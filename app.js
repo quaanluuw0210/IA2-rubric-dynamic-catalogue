@@ -30,12 +30,27 @@ const cart = {};
 // Test: "Load more", then Add on a new product. If the count does not move,
 // your listener is on the old buttons, not on the list.
 
-// TODO B1: catalogue.addEventListener(...)
+catalogue.addEventListener('click', (event) => {
+  if (!(event.target instanceof Element)) return;
+
+  const button = event.target.closest('.add');
+  if (!button || !catalogue.contains(button) || button.disabled) return;
+
+  const card = button.closest('.card');
+  if (!card || card.querySelector('.stock')?.textContent.trim().toLowerCase() === 'sold out') return;
+
+  const productId = card.dataset.id;
+  if (!productId) return;
+
+  cart[productId] = (cart[productId] || 0) + 1;
+  renderCart();
+});
 
 
 function renderCart() {
-  // TODO B1: write the number of items in the cart into cartCount.
-  // Object.values(cart) gives [2, 1]; add them up. Use textContent.
+  cartCount.textContent = String(
+    Object.values(cart).reduce((total, quantity) => total + quantity, 0)
+  );
 
   // Stretch B4: also write ' · 540.000 đ' into cartTotal.
   // Prices are in data-price on each card. dataset values are STRINGS:
