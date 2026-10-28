@@ -62,17 +62,32 @@ function renderCart() {
 // B2 — Filter as you type
 // ---------------------------------------------------------------------------
 function applyFilter() {
-  // TODO B2:
-  // 1. Read searchInput.value, trim() it, toLowerCase() it.
-  // 2. For every .card: card.hidden = true unless its .name contains the query
-  //    (compare lower-case with lower-case).
-  // 3. Write ONE line into statusBox, with textContent — never innerHTML:
-  //      query is empty   -> ''  (nothing)
-  //      some cards match -> 'Showing 3 of 8 products'
-  //      nothing matches  -> 'No products match "<exactly what the user typed>"'
+  const rawQuery = searchInput.value.trim();
+  const query = rawQuery.toLowerCase();
+  const cards = [...catalogue.querySelectorAll('.card')];
+
+  if (!query) {
+    cards.forEach((card) => {
+      card.hidden = false;
+    });
+    statusBox.textContent = '';
+    return;
+  }
+
+  let matchCount = 0;
+  cards.forEach((card) => {
+    const name = card.querySelector('.name').textContent.toLowerCase();
+    const matches = name.includes(query);
+    card.hidden = !matches;
+    if (matches) matchCount += 1;
+  });
+
+  statusBox.textContent = matchCount > 0
+    ? `Showing ${matchCount} of ${cards.length} products`
+    : `No products match "${rawQuery}"`;
 }
 
-// TODO B2: call applyFilter on every 'input' event of searchInput.
+searchInput.addEventListener('input', applyFilter);
 
 
 // ---------------------------------------------------------------------------
