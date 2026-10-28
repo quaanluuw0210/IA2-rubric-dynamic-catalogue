@@ -99,7 +99,10 @@ searchInput.addEventListener('input', applyFilter);
 // This needs Part A first — the search box has to be inside a <form>.
 // Hint: searchInput.form is the form the input belongs to.
 
-// TODO B3
+searchInput.form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  applyFilter();
+});
 
 
 // ---------------------------------------------------------------------------
